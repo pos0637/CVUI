@@ -15,6 +15,7 @@
     "license": "ISC",
     "devDependencies": {
         "@babel/core": "^7.0.0",
+        "@babel/plugin-proposal-decorators": "^7.7.4",
         "@babel/preset-env": "^7.0.0",
         "@babel/preset-react": "^7.0.0",
         "autodll-webpack-plugin": "^0.4.2",
@@ -74,13 +75,12 @@
         "paths-js": "^0.4.10",
         "prop-types": "^15.6.2",
         "rc-progress": "^2.2.6",
-        "react": "^16.5.0",
+        "react": "^16.12.0",
         "react-addons-pure-render-mixin": "^15.6.2",
         "react-chartjs-2": "^2.7.4",
         "react-dnd": "^9.5.1",
         "react-dnd-html5-backend": "^9.5.1",
-        "react-dom": "^16.5.0",
-        "react-drag-drop-container": "^6.1.1",
+        "react-dom": "^16.12.0",
         "react-intl-universal": "^2.2.1",
         "react-live-route": "^3.1.6",
         "react-router-dom": "^5.1.2"

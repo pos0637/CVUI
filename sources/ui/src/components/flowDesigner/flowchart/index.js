@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
-import { DropTarget } from 'react-drag-drop-container';
+import { DropTarget } from 'react-dnd';
 import createEngine, { DefaultLinkModel, DefaultNodeModel, DiagramModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import BaseComponent from '~/components/baseComponent';
@@ -49,16 +49,31 @@ const Container = styled.div`
  * @class Droppable
  * @extends {BaseComponent}
  */
-export default class FlowChart extends BaseComponent {
+@DropTarget((props) => props.targetKey,
+    {
+        drop(props, monitor, component) {
+            const { x: offsetX, y: offsetY } = monitor.getClientOffset();
+            const { x: startX, y: startY } = component.canvasRef.current.getBoundingClientRect();
+            props.onDrop && props.onDrop(component, monitor.getItem(), offsetX - startX, offsetY - startY);
+        }
+    },
+    connect => ({
+        connectDropTarget: connect.dropTarget()
+    })
+)
+class FlowChart extends BaseComponent {
     static propTypes = {
-        targetKey: PropTypes.string // 拖拽目标
+        targetKey: PropTypes.string, // 拖拽目标
+        onDrop: PropTypes.func // 拖拽事件处理函数
     }
 
     static defaultProps = {
+        onDrop: null
     }
 
     constructor(props) {
         super(props);
+        this.canvasRef = React.createRef();
         this.engine = createEngine();
         this.model = new DiagramModel();
         this.engine.setModel(this.model);
@@ -76,15 +91,19 @@ export default class FlowChart extends BaseComponent {
     }
 
     _render() {
-        return (
-            <DropTarget targetKey={this.props.targetKey}>
+        const { connectDropTarget } = this.props;
+
+        return connectDropTarget(
+            <div ref={this.canvasRef} style={{ width: "100%", height: "100%" }}>
                 <Container
                     background={this.props.background || 'rgb(60, 60, 60)'}
                     color={this.props.color || 'rgba(255,255,255, 0.05)'}
                 >
                     <CanvasWidget engine={this.engine} />
                 </Container>
-            </DropTarget>
+            </div>
         );
     }
 }
+
+export default FlowChart;

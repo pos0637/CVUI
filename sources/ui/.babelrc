@@ -15,12 +15,18 @@
             }
         ],
         [
+            "@babel/plugin-proposal-decorators",
+            {
+                "legacy": true
+            }
+        ],
+        [
             "import",
             {
                 "libraryName": "antd",
                 "libraryDirectory": "es",
                 "style": "css"
             }
-        ]
+        ]        
     ]
 }

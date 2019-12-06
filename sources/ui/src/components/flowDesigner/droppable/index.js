@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DragDropContainer } from 'react-drag-drop-container';
+import { DragSource } from 'react-dnd';
 import BaseComponent from '~/components/baseComponent';
 
 /**
@@ -10,40 +10,38 @@ import BaseComponent from '~/components/baseComponent';
  * @class Droppable
  * @extends {BaseComponent}
  */
-export default class Droppable extends BaseComponent {
+@DragSource((props) => props.targetKey,
+    {
+        beginDrag(props) {
+            return {
+                userData: props.userData
+            };
+        }
+    },
+    (connect, monitor) => ({
+        connectDragSource: connect.dragSource(),
+        isDragging: monitor.isDragging()
+    })
+)
+class Droppable extends BaseComponent {
     static propTypes = {
         targetKey: PropTypes.string, // 拖拽目标
         width: PropTypes.number.isRequired, // 宽度
         height: PropTypes.number.isRequired, // 高度
-        userData: PropTypes.string, // 用户数据
-        onDrop: PropTypes.func // 拖拽事件处理函数
-    }
-
-    static defaultProps = {
-        onDrop: null
+        userData: PropTypes.string // 用户数据
     }
 
     _render() {
         const child = React.cloneElement(this.props.children, { ref: (ref) => { this.view = ref; } });
+        const { connectDragSource, isDragging } = this.props;
+        const opacity = isDragging ? 0.4 : 1;
 
-        return (
-            <div style={{ display: "inline-block", position: "relative", width: this.props.width, height: this.props.height }}>
-                <div style={{ position: "absolute", left: 0, top: 0, width: this.props.width, height: this.props.height }}>
-                    {child}
-                </div>
-                <div style={{ position: "absolute", left: 0, top: 0, width: this.props.width, height: this.props.height }}>
-                    <DragDropContainer
-                        targetKey={this.props.targetKey}
-                        dragData={{ userData: this.props.userData }}
-                        customDragElement={this.props.customDragElement}
-                        onDrop={(x, y) => {
-                            this.props.onDrop && this.props.onDrop(x, y);
-                        }}
-                    >
-                        {child}
-                    </DragDropContainer>
-                </div>
+        return connectDragSource(
+            <div style={{ width: this.props.width, height: this.props.height, opacity }}>
+                {child}
             </div>
         );
     }
 }
+
+export default Droppable;
