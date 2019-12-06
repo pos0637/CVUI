@@ -48,6 +48,16 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
+                test: /\.js$/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                },
+                include: /node_modules\/@projectstorm/
+            },
+            {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
             },

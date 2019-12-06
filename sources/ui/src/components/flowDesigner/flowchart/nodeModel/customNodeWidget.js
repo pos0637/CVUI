@@ -1,5 +1,6 @@
 import React from 'react';
 import { PortWidget } from '@projectstorm/react-diagrams';
+import './customNode.css';
 
 export default class CustomNodeWidget extends React.Component {
     render() {

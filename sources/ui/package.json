@@ -44,7 +44,7 @@
         "less": "^3.8.1",
         "less-loader": "^5.0.0",
         "mockjs": "^1.0.1-beta3",
-        "node-sass": "^4.9.3",
+        "node-sass": "^4.13.0",
         "postcss-loader": "^3.0.0",
         "sass-loader": "^8.0.0",
         "style-loader": "^1.0.1",
