@@ -5,6 +5,8 @@ import { DropTarget } from 'react-dnd';
 import createEngine, { DefaultLinkModel, DefaultNodeModel, DiagramModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import BaseComponent from '~/components/baseComponent';
+import CustomNodeFactory from './nodeModel/customNodeFactory';
+import CustomNodeModel from './nodeModel/customNodeModel';
 
 const Container = styled.div`
     height: 100%;
@@ -77,10 +79,11 @@ class FlowChart extends BaseComponent {
         this.engine = createEngine();
         this.model = new DiagramModel();
         this.engine.setModel(this.model);
+        this.engine.getNodeFactories().registerFactory(new CustomNodeFactory());
     }
 
     addNode(name, position) {
-        const node = new DefaultNodeModel({
+        const node = new CustomNodeModel({
             name: name,
             color: 'rgb(0,192,255)',
         });
