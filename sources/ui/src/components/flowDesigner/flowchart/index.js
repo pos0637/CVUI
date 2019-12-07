@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { DropTarget } from 'react-dnd';
-import createEngine, { DefaultLinkModel, DefaultNodeModel, DiagramModel } from '@projectstorm/react-diagrams';
+import createEngine, { DiagramModel, DefaultDiagramState } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import BaseComponent from '~/components/baseComponent';
 import CustomNodeFactory from './nodeModel/customNodeFactory';
@@ -77,11 +77,26 @@ class FlowChart extends BaseComponent {
         super(props);
         this.canvasRef = React.createRef();
         this.engine = createEngine();
+
+        // 禁止空连接
+        const state = this.engine.getStateMachine().getCurrentState();
+        if (state instanceof DefaultDiagramState) {
+            state.dragNewLink.config.allowLooseLinks = false;
+        }
+
+        // 注册自定义节点工厂
+        this.engine.getNodeFactories().registerFactory(new CustomNodeFactory());
         this.model = new DiagramModel();
         this.engine.setModel(this.model);
-        this.engine.getNodeFactories().registerFactory(new CustomNodeFactory());
     }
 
+    /**
+     * 添加节点
+     *
+     * @param {*} name 名称
+     * @param {*} position 位置
+     * @memberof FlowChart
+     */
     addNode(name, position) {
         const node = new CustomNodeModel({
             name: name,
@@ -90,6 +105,27 @@ class FlowChart extends BaseComponent {
         node.setPosition(position.x, position.y);
 
         this.model.addAll(node);
+        this.engine.setModel(this.model);
+    }
+
+    /**
+     * 删除节点
+     *
+     * @param {*} node 节点
+     * @memberof FlowChart
+     */
+    removeNode(node) {
+        this.model.removeNode(node);
+        this.engine.setModel(this.model);
+    }
+
+    /**
+     * 删除所有节点
+     *
+     * @memberof FlowChart
+     */
+    removeAllNodes() {
+        this.model.removeAllNodes();
         this.engine.setModel(this.model);
     }
 

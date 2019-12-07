@@ -1,6 +1,13 @@
-import { DefaultPortModel, NodeModel } from '@projectstorm/react-diagrams';
+import { DefaultNodeModel, DefaultPortModel } from '@projectstorm/react-diagrams';
 
-export default class CustomNodeModel extends NodeModel {
+/**
+ * 自定义节点
+ *
+ * @export
+ * @class CustomNodeModel
+ * @extends {DefaultNodeModel}
+ */
+export default class CustomNodeModel extends DefaultNodeModel {
     constructor(options = {}) {
         super({
             ...options,
@@ -8,19 +15,8 @@ export default class CustomNodeModel extends NodeModel {
         });
         this.color = options.color || { options: 'red' };
 
-        // setup an in and out port
-        this.addPort(
-            new DefaultPortModel({
-                in: true,
-                name: 'in'
-            })
-        );
-        this.addPort(
-            new DefaultPortModel({
-                in: false,
-                name: 'out'
-            })
-        );
+        this.addPort(new DefaultPortModel({ in: true, name: '输入' }));
+        this.addPort(new DefaultPortModel({ in: false, name: '输出' }));
     }
 
     serialize() {
