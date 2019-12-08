@@ -101,6 +101,7 @@ class FlowChart extends BaseComponent {
         const node = new CustomNodeModel({
             name: name,
             color: 'rgb(0,192,255)',
+            sender: this
         });
         node.setPosition(position.x, position.y);
 
@@ -116,6 +117,7 @@ class FlowChart extends BaseComponent {
      */
     removeNode(node) {
         this.model.removeNode(node);
+        // TODO: 自动删除连接
         this.engine.setModel(this.model);
     }
 

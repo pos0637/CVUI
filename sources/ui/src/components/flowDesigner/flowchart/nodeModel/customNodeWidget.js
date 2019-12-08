@@ -1,7 +1,9 @@
 import React from 'react';
 import * as _ from 'lodash';
 import styled from '@emotion/styled';
+import { Button } from 'antd';
 import CustomPortLabel from './customPortLabelWidget';
+import './react-contextmenu.css';
 
 const S = {
     Node: styled.div`
@@ -73,6 +75,8 @@ export default class CustomNodeWidget extends React.Component {
             >
                 <S.Title>
                     <S.TitleName>{this.props.node.getOptions().name}</S.TitleName>
+                    <Button type="primary" shape="circle" icon="setting" size="small" onClick={() => this._onSettingClick()} />
+                    <Button type="primary" shape="circle" icon="close" size="small" onClick={() => this._onCloseClick()} />
                 </S.Title>
                 <S.Ports>
                     <S.PortsContainer>{_.map(this.props.node.getInPorts(), (port) => this.generatePort(port))}</S.PortsContainer>
@@ -80,5 +84,26 @@ export default class CustomNodeWidget extends React.Component {
                 </S.Ports>
             </S.Node>
         );
+    }
+
+    /**
+     * 设置按钮点击处理事件
+     *
+     * @memberof CustomNodeWidget
+     */
+    _onSettingClick() {
+        console.log('_onSettingClick');
+    }
+
+    /**
+     * 关闭按钮点击处理事件
+     *
+     * @memberof CustomNodeWidget
+     */
+    _onCloseClick() {
+        const { sender } = this.props.node.getOptions();
+        if (typeof (sender !== "undefined") && (sender != null)) {
+            sender.removeNode(this.props.node);
+        }
     }
 }
