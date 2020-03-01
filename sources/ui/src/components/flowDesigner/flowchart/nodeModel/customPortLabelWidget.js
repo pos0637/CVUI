@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'antd';
+import { CaretRightOutlined } from '@ant-design/icons';
 import { PortWidget } from '@projectstorm/react-diagrams-core';
 import styled from '@emotion/styled';
 
@@ -36,7 +36,7 @@ export default class CustomPortLabel extends React.Component {
     render() {
         const port = (
             <PortWidget engine={this.props.engine} port={this.props.port}>
-                <S.Port><Icon type="caret-right" style={{ fontSize: "14px" }} /></S.Port>
+                <S.Port><CaretRightOutlined /></S.Port>
             </PortWidget>
         );
         const label = <S.Label>{this.props.port.getOptions().label}</S.Label>;

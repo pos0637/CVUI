@@ -2,6 +2,7 @@ import React from 'react';
 import * as _ from 'lodash';
 import styled from '@emotion/styled';
 import { Button } from 'antd';
+import { SettingOutlined, CloseOutlined } from '@ant-design/icons';
 import CustomPortLabel from './customPortLabelWidget';
 import './react-contextmenu.css';
 
@@ -55,15 +56,12 @@ const S = {
  * @extends {React.Component}
  */
 export default class CustomNodeWidget extends React.Component {
-    /**
-     * 生成端口组件
-     *
-     * @param {*} port 端口
-     * @returns 端口组件
-     * @memberof CustomNodeWidget
-     */
-    generatePort(port) {
-        return <CustomPortLabel engine={this.props.engine} port={port} key={port.id} />;
+    componentDidMount() {
+        this.props.node.registerListener({
+			selectionChanged: (event) => {
+				console.log(this.props.node)
+			}
+		});
     }
 
     render() {
@@ -75,15 +73,26 @@ export default class CustomNodeWidget extends React.Component {
             >
                 <S.Title>
                     <S.TitleName>{this.props.node.getOptions().name}</S.TitleName>
-                    <Button type="primary" shape="circle" icon="setting" size="small" onClick={() => this._onSettingClick()} />
-                    <Button type="primary" shape="circle" icon="close" size="small" onClick={() => this._onCloseClick()} />
+                    <Button type="primary" shape="circle" icon={<SettingOutlined />} size="small" onClick={() => this._onSettingClick()} />
+                    <Button type="primary" shape="circle" icon={<CloseOutlined />} size="small" onClick={() => this._onCloseClick()} />
                 </S.Title>
                 <S.Ports>
-                    <S.PortsContainer>{_.map(this.props.node.getInPorts(), (port) => this.generatePort(port))}</S.PortsContainer>
-                    <S.PortsContainer>{_.map(this.props.node.getOutPorts(), (port) => this.generatePort(port))}</S.PortsContainer>
+                    <S.PortsContainer>{_.map(this.props.node.getInPorts(), (port) => this._generatePort(port))}</S.PortsContainer>
+                    <S.PortsContainer>{_.map(this.props.node.getOutPorts(), (port) => this._generatePort(port))}</S.PortsContainer>
                 </S.Ports>
             </S.Node>
         );
+    }
+
+    /**
+     * 生成端口组件
+     *
+     * @param {*} port 端口
+     * @returns 端口组件
+     * @memberof CustomNodeWidget
+     */
+    _generatePort(port) {
+        return <CustomPortLabel engine={this.props.engine} port={port} key={port.id} />;
     }
 
     /**

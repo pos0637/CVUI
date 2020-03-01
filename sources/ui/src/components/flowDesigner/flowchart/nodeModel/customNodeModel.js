@@ -14,6 +14,7 @@ export default class CustomNodeModel extends DefaultNodeModel {
             type: 'custom-node'
         });
         this.color = options.color || { options: 'red' };
+        this.sender = options.sender;
 
         this.addPort(new DefaultPortModel({ in: true, name: '输入' }));
         this.addPort(new DefaultPortModel({ in: false, name: '输出' }));
