@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { DropTarget } from 'react-dnd';
 import createEngine, { DiagramModel, DefaultDiagramState } from '@projectstorm/react-diagrams';
+import { DefaultNodeModel, DefaultPortModel } from '@projectstorm/react-diagrams';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import BaseComponent from '~/components/baseComponent';
 import CustomNodeFactory from './nodeModel/customNodeFactory';
@@ -95,6 +96,7 @@ class FlowChart extends BaseComponent {
      *
      * @param {*} name 名称
      * @param {*} position 位置
+     * @returns 节点
      * @memberof FlowChart
      */
     addNode(name, position) {
@@ -107,6 +109,8 @@ class FlowChart extends BaseComponent {
 
         this.model.addAll(node);
         this.engine.setModel(this.model);
+
+        return node;
     }
 
     /**
@@ -127,8 +131,35 @@ class FlowChart extends BaseComponent {
      * @memberof FlowChart
      */
     removeAllNodes() {
-        this.model.removeAllNodes();
+        const nodes = this.model.getNodes();
+        for (let node of nodes) {
+            this.model.removeNode(node);
+        }
         this.engine.setModel(this.model);
+    }
+
+    /**
+     * 连接端口
+     *
+     * @param {*} port1 端口
+     * @param {*} port2 端口
+     * @param {*} label 标签
+     * @returns 连接
+     * @memberof FlowChart
+     */
+    link(port1, port2, label) {
+        const link = port1.link(port2)
+        if ((typeof label !== 'undefined') && (label !== null)) {
+            link.addLabel(label);
+        }
+
+        port1.reportPosition();
+        port2.reportPosition()
+
+        this.model.addAll(link);
+        this.engine.setModel(this.model);
+
+        return link;
     }
 
     _render() {
